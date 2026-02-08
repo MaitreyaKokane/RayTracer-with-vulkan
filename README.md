@@ -46,7 +46,7 @@ PREREQUISITES (RECOMMENDED)
 BUILD & RUN (WINDOWS)
 
 1) Clone with submodules:
-   git clone --recursive https://github.com/MaitreyaKokane/RayTracer-with-vulkan.git
+   git clone --recursive https://github.com/MaitreyaKokane/CPU_Based_RayTracing_Renderer.git
 
    If you already cloned without --recursive:
    git submodule update --init --recursive
