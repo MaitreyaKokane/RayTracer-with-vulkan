@@ -9,7 +9,114 @@ PROJECT OVERVIEW
 
 This project is created using the Walnut app template (Walnut kept as an external submodule),
 and implements a ray tracer as a desktop application. 
+# LumaRT — Real-Time Ray Tracer
 
+> A CPU path tracer built in C++ on the [Walnut](https://github.com/StudioCherno/Walnut) application framework, using Vulkan for presentation and ImGui for interactive controls.
+
+![Metallic + Emissive Materials](https://github.com/user-attachments/assets/27fbc6ad-658e-45a7-b3b2-dad6e574fef7)
+![Scene with Reflections](https://github.com/user-attachments/assets/c07699f2-2c09-4e78-9371-f3beff5819f6)
+
+---
+
+## Overview
+
+LumaRT is an interactive ray tracer that renders scenes per-pixel on the CPU and presents the result through a Vulkan-backed viewport. Each frame accumulates samples for progressive refinement — move the camera or change any parameter and the image resets cleanly.
+
+The project uses Walnut as an external submodule, which provides the Vulkan renderer, windowing, and ImGui integration so the codebase stays focused on ray tracing logic.
+
+---
+
+## Features
+
+- **Progressive accumulation** — samples stack up over time for noise-free converged images
+- **Interactive camera** — WASD + Q/E movement, right-click mouse look
+- **Path tracing with multiple bounces** — configurable ray bounce depth
+- **Material system**
+  - Diffuse (Lambertian)
+  - Metallic with adjustable roughness (sharp to blurry reflections)
+  - Emissive with per-material on/off toggle and strength control
+- **Sky color control** — pick any sky color from the UI via ColorEdit3
+- **Multithreaded rendering** — parallel row dispatch via `std::execution::par`
+- **Russian Roulette** early termination for low-contribution rays
+- **Real-time UI** — all scene and material parameters editable live via ImGui
+
+---
+
+## Repository Layout
+
+```
+LumaRT/
+├── RayTracer/          # Main application source
+│   └── src/
+│       ├── WalnutApp.cpp   # Entry point, UI, scene setup
+│       ├── Renderer.h/cpp  # Ray tracing core
+│       ├── Camera.h/cpp    # Camera, ray direction cache
+│       ├── Scene.h         # Sphere + Material structs
+│       └── Ray.h           # Ray struct
+├── Walnut/             # Walnut framework (git submodule)
+├── scripts/            # Setup scripts (Premake)
+└── premake5.lua        # Workspace configuration
+```
+
+---
+
+## Prerequisites
+
+- Windows 10 / 11
+- Visual Studio 2022
+- Git (with submodule support)
+- Vulkan-capable GPU and up-to-date drivers
+
+---
+
+## Build & Run
+
+### 1. Clone with submodules
+```bash
+git clone --recursive https://github.com/MaitreyaKokane/LumaRT.git
+```
+
+If you already cloned without `--recursive`:
+```bash
+git submodule update --init --recursive
+```
+
+### 2. Generate project files
+```bash
+scripts\Setup.bat
+```
+
+### 3. Build and run
+Open the generated `RayTracer.sln` in Visual Studio 2022, set the build configuration, and run.
+
+---
+
+## Controls
+
+| Input | Action |
+|-------|--------|
+| Right Mouse + WASD | Move camera |
+| Right Mouse + drag | Look around |
+| Q / E | Move down / up |
+| UI — Reset | Clear accumulated samples |
+| UI — Accumulate | Toggle progressive sampling |
+
+---
+
+## Credits
+
+- Ray tracing implementation follows [The Cherno's Ray Tracing series](https://www.youtube.com/playlist?list=PLlrATfBNZ98edc5GshdBtREv5asFW3yXl) on YouTube
+- Application framework: [Walnut](https://github.com/StudioCherno/Walnut) by [StudioCherno (The Cherno)](https://github.com/StudioCherno)
+
+---
+
+## Roadmap
+
+- [ ] BVH acceleration structure
+- [ ] Triangle mesh support
+- [ ] Texture mapping
+- [ ] GPU path tracing (compute shaders)
+- [ ] Environment / HDR sky maps
 Typical workflow:
 - Update camera / UI
 - Ray trace into an image buffer
